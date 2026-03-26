@@ -237,8 +237,8 @@ export default function Portfolio() {
                 {projects.map((project, index) => (
                   <motion.div
                     key={index}
-                    whileHover={{ scale: 1.05 }}
-                    className="snap-start bg-[#12141b]/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-gray-800 transition"
+                    whileHover={window.innerWidth > 768 ? { scale: 1.05 } : {}}
+                    className="snap-start bg-[#12141b]/80 p-4 sm:p-6 rounded-2xl border border-gray-800 transition"
                   >
                     {/* IMAGE */}
                     <div className="h-40 sm:h-44 rounded-xl mb-4 overflow-hidden bg-gray-800">
@@ -378,7 +378,7 @@ export default function Portfolio() {
           {/* CTA UTAMA */}
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
-              href="https://wa.me/628238624771"
+              href="https://wa.me/6282386247771"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-medium transition"
