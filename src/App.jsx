@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import fileImg from "./assets/profle.jpeg";
-import { FaReact, FaNodeJs, FaGithub } from "react-icons/fa";
+import { FaReact, FaNodeJs, FaGithub, FaLaravel } from "react-icons/fa";
 import { VscVscode } from "react-icons/vsc";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { SiNextdotjs, SiTailwindcss, SiMysql, SiGit } from "react-icons/si";
@@ -316,6 +316,11 @@ export default function Portfolio() {
                 <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
                   <FaNodeJs className="text-green-500" />
                   <span>NodeJS</span>
+                </div>
+
+                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                  <FaLaravel className="text-green-500" />
+                  <span>Laravel</span>
                 </div>
 
                 <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
