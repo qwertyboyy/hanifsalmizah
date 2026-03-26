@@ -190,45 +190,58 @@ export default function Portfolio() {
         {/* PROJECTS */}
         <section
           id="projects"
-          className="px-6 py-20 max-w-6xl mx-auto scroll-mt-24"
+          className="px-4 sm:px-6 py-14 sm:py-20 max-w-6xl mx-auto scroll-mt-24"
         >
-          <h2 className="text-3xl font-bold mb-4">Featured Projects</h2>
-          <p className="text-gray-400 mb-10 max-w-2xl">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            Featured Projects
+          </h2>
+
+          <p className="text-gray-400 mb-8 sm:mb-10 max-w-2xl text-sm sm:text-base">
             Project terpilih yang pernah saya kerjakan, mencakup berbagai
             teknologi dan solusi kreatif untuk tantangan yang berbeda.
           </p>
 
           <div className="relative">
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-15 bg-gradient-to-r from-[#0b0d12] to-transparent z-10" />
+            {/* GRADIENT LEFT */}
+            <div className="hidden md:block pointer-events-none absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-[#0b0d12] to-transparent z-10" />
 
-            {/* GRADIENT KANAN */}
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-15 bg-gradient-to-l from-[#0b0d12] to-transparent z-10" />
+            {/* GRADIENT RIGHT */}
+            <div className="hidden md:block pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#0b0d12] to-transparent z-10" />
+
             {/* BUTTON LEFT */}
             <button
-              onClick={scrollLeft}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition"
+              onClick={() =>
+                scrollRef.current.scrollBy({ left: -300, behavior: "smooth" })
+              }
+              className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition"
             >
               <FiChevronLeft size={20} />
             </button>
 
             {/* BUTTON RIGHT */}
             <button
-              onClick={scrollRight}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition"
+              onClick={() =>
+                scrollRef.current.scrollBy({ left: 300, behavior: "smooth" })
+              }
+              className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition"
             >
               <FiChevronRight size={20} />
             </button>
 
             {/* SCROLL AREA */}
-            <div ref={scrollRef} className="overflow-x-auto">
-              <div className="grid grid-flow-col auto-cols-[33.333%] gap-6 min-w-full">
+            <div
+              ref={scrollRef}
+              className="overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide"
+            >
+              <div className="grid grid-flow-col auto-cols-[85%] sm:auto-cols-[60%] md:auto-cols-[40%] lg:auto-cols-[33.333%] gap-4 sm:gap-6 min-w-full">
                 {projects.map((project, index) => (
                   <motion.div
                     key={index}
                     whileHover={{ scale: 1.05 }}
-                    className="bg-[#12141b]/80 backdrop-blur-md p-6 rounded-2xl border border-gray-800"
+                    className="snap-start bg-[#12141b]/80 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-gray-800 transition"
                   >
-                    <div className="h-44 rounded-xl mb-4 overflow-hidden bg-gray-800">
+                    {/* IMAGE */}
+                    <div className="h-40 sm:h-44 rounded-xl mb-4 overflow-hidden bg-gray-800">
                       <img
                         src={project.image}
                         alt={project.title}
@@ -236,17 +249,22 @@ export default function Portfolio() {
                       />
                     </div>
 
+                    {/* TITLE */}
                     <a
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xl font-semibold mb-2 inline-block hover:text-purple-400 transition"
+                      className="text-lg sm:text-xl font-semibold mb-2 inline-block hover:text-purple-400 transition"
                     >
                       {project.title}
                     </a>
 
-                    <p className="text-gray-400 text-sm mb-4">{project.desc}</p>
+                    {/* DESC */}
+                    <p className="text-gray-400 text-sm mb-3 sm:mb-4 line-clamp-3">
+                      {project.desc}
+                    </p>
 
+                    {/* TECH */}
                     <p className="text-xs text-gray-500">{project.tech}</p>
                   </motion.div>
                 ))}
@@ -338,15 +356,43 @@ export default function Portfolio() {
         </section>
 
         {/* CONTACT */}
-        <section id="contact" className="px-6 py-20 text-center">
-          <h2 className="text-3xl font-bold mb-4">Let’s Work Together</h2>
-          <p className="text-gray-400 mb-8">
-            Open for collaboration and building impactful products.
+        <section
+          id="contact"
+          className="px-4 sm:px-6 py-16 sm:py-20 max-w-4xl mx-auto text-center"
+        >
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            Let’s Work Together
+          </h2>
+
+          <p className="text-gray-400 mb-8 text-sm sm:text-base max-w-xl mx-auto">
+            Punya project, ide, atau peluang kolaborasi? Langsung aja hubungi
+            kontak di bawah ini. saya terbuka untuk freelance, kerja sama, atau
+            sekedar diskusi.
           </p>
 
-          <button className="bg-white text-black px-6 py-3 rounded-xl font-semibold hover:opacity-80 transition">
-            Get In Touch
-          </button>
+          {/* CTA UTAMA */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <a
+              href="https://wa.me/628238624771"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-medium transition"
+            >
+              Send Whatsapp
+            </a>
+
+            <a
+              href="hanifsalmizah0@gmail.com"
+              className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-medium transition"
+            >
+              Send Email
+            </a>
+          </div>
+
+          {/* ALTERNATIVE (BIAR KELIATAN TRUSTED) */}
+          <p className="text-gray-500 text-xs sm:text-sm mt-6">
+            Biasanya respon cepat via WhatsApp
+          </p>
         </section>
       </div>
     </div>
