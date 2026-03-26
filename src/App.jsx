@@ -387,7 +387,7 @@ export default function Portfolio() {
             </a>
 
             <a
-              href="hanifsalmizah0@gmail.com"
+              href="mailto:hanifsalmizah0@gmail.com"
               className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-medium transition"
             >
               Send Email
