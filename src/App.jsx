@@ -39,10 +39,10 @@ export default function Portfolio() {
       link: "https://lpspadang.admin.co.id/",
     },
     {
-      title: "Coming Soon",
-      desc: "Coming Soon",
-      tech: "-",
-      image: "",
+      title: "Real-Time Interview Queue Management System",
+      desc: "A real-time system for managing interview queues, providing live updates and efficient scheduling.",
+      tech: "Laravel • Socket.io",
+      image: "./images/interviewQA.png",
     },
     {
       title: "Coming Soon",
