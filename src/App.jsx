@@ -41,14 +41,14 @@ export default function Portfolio() {
     {
       title: "Real-Time Interview Queue Management System",
       desc: "A real-time system for managing interview queues, providing live updates and efficient scheduling.",
-      tech: "Laravel/Blade • Socket.io",
+      tech: "Laravel • Socket.io • TailwindCSS • MySQL",
       image: "./images/interviewQA.png",
     },
     {
-      title: "Coming Soon",
-      desc: "Coming Soon",
-      tech: "-",
-      image: "",
+      title: "POS-Web",
+      desc: "A web-based point of sale system for managing inventory and sales.",
+      tech: "Laravel  • MySQL • TailwindCSS",
+      image: "./images/pos.png",
     },
   ];
 
