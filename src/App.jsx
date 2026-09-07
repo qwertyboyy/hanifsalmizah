@@ -29,7 +29,8 @@ export default function Portfolio() {
       title: "Sistem Informasi Bank Sampah",
       desc: "Mengubah pencatatan manual menjadi sistem digital yang lebih efisien dan memiliki 3 Role Based Access Control.",
       tech: "React • ExpressJS • MySQL",
-      image: "./images/dashboardBS.png",
+      image: "./images/BSLH.png",
+      link: "https://banksampah.dlh.padang.go.id/",
     },
     {
       title: "Sistem Informasi Lembaga Pengeloala Sampah",
