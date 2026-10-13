@@ -1,406 +1,328 @@
-import { motion } from "framer-motion";
-import { TypeAnimation } from "react-type-animation";
-import fileImg from "./assets/profle.jpeg";
-import { FaReact, FaNodeJs, FaGithub, FaLaravel } from "react-icons/fa";
-import { VscVscode } from "react-icons/vsc";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { SiNextdotjs, SiTailwindcss, SiMysql, SiGit } from "react-icons/si";
-import { useRef } from "react";
+﻿import { useEffect, useState } from "react";
+import {
+  FiArrowUpRight,
+  FiArrowRight,
+  FiMenu,
+  FiX,
+  FiMail,
+} from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
+import profileImage from "./assets/pp.jpeg";
+import "./App.css";
+import { initialProjects } from "./data/projects";
+import { supabase } from "./lib/supabase";
+import { imageSource, safeWebUrl } from "./lib/projects";
+
+const whatsapp =
+  "https://wa.me/6282386247771?text=" +
+  encodeURIComponent(
+    "Halo Hanif, saya melihat portfolio Anda dan ingin berdiskusi tentang kebutuhan proyek saya.",
+  );
+const email = "mailto:hanifsalmizah0@gmail.com";
+const navigation = [
+  ["layanan", "Layanan"],
+  ["projects", "Proyek"],
+  ["tentang", "Tentang"],
+  ["contact", "Kontak"],
+];
+
+function SectionHeading({ name, children }) {
+  return (
+    <div className="section-heading">
+      <h2>
+        <span aria-hidden="true">#</span>
+        {name}
+      </h2>
+      <div className="heading-line" />
+      {children}
+    </div>
+  );
+}
 
 export default function Portfolio() {
-  const scrollRef = useRef();
-
-  const scrollLeft = () => {
-    scrollRef.current.scrollBy({
-      left: -320,
-      behavior: "smooth",
-    });
-  };
-
-  const scrollRight = () => {
-    scrollRef.current.scrollBy({
-      left: 320,
-      behavior: "smooth",
-    });
-  };
-
-  const projects = [
-    {
-      title: "Sistem Informasi Bank Sampah",
-      desc: "Mengubah pencatatan manual menjadi sistem digital yang lebih efisien dan memiliki 3 Role Based Access Control.",
-      tech: "React • ExpressJS • MySQL",
-      image: "./images/BSLH.png",
-      link: "https://banksampah.dlh.padang.go.id/",
-    },
-    {
-      title: "Sistem Informasi Lembaga Pengeloala Sampah",
-      desc: "Membantu Pembuatan UML Diagram untuk sistem informasi lembaga pengelola sampah.",
-      tech: "UML Diagram",
-      image: "./images/LPS.png",
-      link: "https://lpspadang.admin.co.id/",
-    },
-    {
-      title: "Real-Time Interview Queue Management System",
-      desc: "A real-time system for managing interview queues, providing live updates and efficient scheduling.",
-      tech: "Laravel • Socket.io • TailwindCSS • MySQL",
-      image: "./images/interviewQA.png",
-    },
-    {
-      title: "POS-Web",
-      desc: "A web-based point of sale system for managing inventory and sales.",
-      tech: "Laravel  • MySQL • TailwindCSS",
-      image: "./images/pos.png",
-    },
-  ];
-
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [projects, setProjects] = useState(supabase ? [] : initialProjects);
+  const [projectStatus, setProjectStatus] = useState(supabase ? 'loading' : 'ready');
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    if (!supabase) return;
+    let active = true;
+    supabase.from('projects').select('*').eq('published', true).order('sort_order').order('created_at')
+      .then(({ data, error }) => {
+        if (!active) return;
+        setProjectStatus(error ? 'error' : 'ready');
+        setProjects(error ? [] : data);
+      }).catch(() => { if (active) setProjectStatus('error'); });
+    return () => { active = false; };
+  }, [retry]);
   return (
-    <div className="bg-[#0b0d12] text-white font-sans scroll-smooth">
-      {/* ================= GLOBAL BACKGROUND ================= */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* BOLA 1 */}
-        <motion.div
-          animate={{
-            x: [0, 100, -50, 0],
-            y: [0, -80, 60, 0],
-            scale: [1, 1.2, 0.9, 1],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[20%] left-[20%] w-[500px] h-[500px] bg-purple-500 opacity-60 blur-[120px]"
-        />
-
-        {/* BOLA 2 */}
-        <motion.div
-          animate={{
-            x: [0, -120, 80, 0],
-            y: [0, 100, -60, 0],
-            scale: [1, 0.8, 1.3, 1],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] bg-blue-500 opacity-60 blur-[120px]"
-        />
-
-        {/* BOLA 3 */}
-        <motion.div
-          animate={{
-            x: [0, 80, -80, 0],
-            y: [0, -60, 100, 0],
-          }}
-          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[50%] left-[50%] w-[400px] h-[400px] bg-pink-500 opacity-40 blur-[120px]"
-        />
-      </div>
-
-      {/* DARK OVERLAY */}
-      <div className="fixed inset-0 bg-black/50 z-1" />
-
-      {/* ================= CONTENT ================= */}
-      <div className="relative z-10">
-        {/* NAVBAR */}
-        <nav className="fixed top-0 w-full bg-[#0b0d12]/70 backdrop-blur border-b border-gray-800 z-50">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 className="font-semibold">My Portfolio</h1>
-            <div className="hidden md:flex gap-6 text-sm text-gray-300">
-              <a href="#home" className="hover:text-white">
-                Home
+    <>
+      <a className="skip-link" href="#main">
+        Lewati ke konten
+      </a>
+      <header className="header">
+        <div className="container header-inner">
+          <a className="brand" href="#home" aria-label="Hanif Rafi, beranda">
+            <span aria-hidden="true">[h]</span> Hanif Rafi
+            <span className="brand-dot">.</span>
+          </a>
+          <button
+            className="menu-toggle"
+            aria-label={menuOpen ? "Tutup navigasi" : "Buka navigasi"}
+            aria-expanded={menuOpen}
+            aria-controls="navigation"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <FiX /> : <FiMenu />}
+          </button>
+          <nav
+            id="navigation"
+            aria-label="Navigasi utama"
+            className={menuOpen ? "navigation is-open" : "navigation"}
+          >
+            {navigation.map(([id, label]) => (
+              <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>
+                <span>#</span>
+                {label}
               </a>
-              <a href="#projects" className="hover:text-white">
-                Projects
+            ))}
+          </nav>
+        </div>
+      </header>
+      <main id="main" className="container">
+        <section id="home" className="hero">
+          <div className="hero-copy">
+            <p className="eyebrow">Halo, saya Hanif Salmizah Rafi</p>
+            <h1>
+              <span>Fullstack developer,</span> dari ide hingga implementasi.
+            </h1>
+            <p className="hero-description">
+              Fullstack developer yang membantu mengubah proses manual menjadi
+              sistem digital. Dari aplikasi bisnis hingga sistem informasi, saya
+              mengembangkan solusi dari konsep hingga implementasi.
+            </p>
+            <div className="actions">
+              <a
+                className="button primary"
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Diskusikan proyek <FiArrowUpRight />
               </a>
-              <a href="#tech-stack" className="hover:text-white">
-                Stack
-              </a>
-              <a href="#contact" className="hover:text-white">
-                Contact
+              <a className="text-link" href="#projects">
+                Lihat karya saya <FiArrowRight />
               </a>
             </div>
+            <p className="hero-note">
+              Aplikasi bisnis / Sistem informasi / Real-time
+            </p>
           </div>
-        </nav>
-
-        {/* HERO */}
-        <section
-          id="home"
-          className="min-h-screen flex items-center justify-center px-6 pt-24"
-        >
-          <div className="max-w-6xl w-full grid md:grid-cols-2 gap-10 items-center">
-            {/* TEXT */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <p className="text-gray-400 mb-2">Hi, I’m</p>
-
-              <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                Hanif Salmizah Rafi
-              </h1>
-
-              <h2 className="text-xl font-bold md:text-2xl text-pink-500 mb-6">
-                <TypeAnimation
-                  sequence={[
-                    "Software Engineer",
-                    2000,
-                    "Fullstack Developer",
-                    2000,
-                    "Creative Builder",
-                    2000,
-                  ]}
-                  speed={50}
-                  repeat={Infinity}
-                />
-              </h2>
-
-              <p className="text-gray-400 max-w-lg mb-8">
-                Mengembangkan produk digital dari konsep hingga implementasi,
-                dengan pendekatan yang menggabungkan teknologi, efisiensi, dan
-                pengalaman pengguna.
-              </p>
-
-              <div className="flex gap-4">
-                <a href="#projects">
-                  <button className="bg-white text-black px-6 py-3 rounded-xl font-semibold hover:opacity-80 transition">
-                    View Projects
-                  </button>
-                </a>
-
-                <a href="#contact">
-                  <button className="border border-gray-600 px-6 py-3 rounded-xl hover:border-white transition">
-                    Contact Me
-                  </button>
-                </a>
-              </div>
-            </motion.div>
-
-            {/* IMAGE */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex justify-center"
-            >
-              <div className="w-85 h-85 bg-[#1a1d26] rounded-2xl flex items-center justify-center">
-                <img
-                  src={fileImg}
-                  alt="Profile"
-                  className="rounded-2xl object-cover w-full h-full"
-                />
-              </div>
-            </motion.div>
+          <figure className="portrait">
+            <div className="portrait-frame">
+              <img
+                src={profileImage}
+                alt="Hanif Salmizah Rafi, fullstack developer"
+                fetchPriority="auto"
+              />
+              <span className="portrait-corner" aria-hidden="true" />
+            </div>
+            <figcaption>
+              <span className="status-square" aria-hidden="true" />
+              Software Engineer &amp; Fullstack Developer
+            </figcaption>
+          </figure>
+        </section>
+        <section id="layanan" className="section">
+          <SectionHeading name="layanan" />
+          <p className="section-intro">
+            Solusi yang dapat saya bantu kerjakan untuk kebutuhan Anda.
+          </p>
+          <div className="services">
+            {[
+              [
+                "01",
+                "Aplikasi web bisnis",
+                "Sistem kasir, inventori, dan aplikasi operasional untuk membantu pencatatan serta pengelolaan data.",
+              ],
+              [
+                "02",
+                "Sistem informasi",
+                "Aplikasi dengan pengelolaan data dan hak akses sesuai peran masing-masing pengguna.",
+              ],
+              [
+                "03",
+                "Perancangan & real-time",
+                "Perancangan alur sistem dengan UML serta fitur pembaruan langsung untuk kebutuhan seperti antrian.",
+              ],
+            ].map(([number, title, description]) => (
+              <article className="service" key={number}>
+                <span className="service-number">/{number}</span>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </article>
+            ))}
           </div>
         </section>
-
-        {/* PROJECTS */}
-        <section
-          id="projects"
-          className="px-4 sm:px-6 py-14 sm:py-20 max-w-6xl mx-auto scroll-mt-24"
-        >
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-            Featured Projects
-          </h2>
-
-          <p className="text-gray-400 mb-8 sm:mb-10 max-w-2xl text-sm sm:text-base">
-            Project terpilih yang pernah saya kerjakan, mencakup berbagai
-            teknologi dan solusi kreatif untuk tantangan yang berbeda.
+        <section id="projects" className="section">
+          <SectionHeading name="proyek">
+            <span className="section-meta">{String(projects.length).padStart(2, "0")} karya terpilih</span>
+          </SectionHeading>
+          <p className="section-intro">
+            Contoh pekerjaan saya, beserta tujuan, kontribusi, dan teknologi
+            yang digunakan.
           </p>
-
-          <div className="relative">
-            {/* GRADIENT LEFT */}
-            <div className="hidden md:block pointer-events-none absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-[#0b0d12] to-transparent z-10" />
-
-            {/* GRADIENT RIGHT */}
-            <div className="hidden md:block pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-[#0b0d12] to-transparent z-10" />
-
-            {/* BUTTON LEFT */}
-            <button
-              onClick={() =>
-                scrollRef.current.scrollBy({ left: -300, behavior: "smooth" })
-              }
-              className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition"
-            >
-              <FiChevronLeft size={20} />
-            </button>
-
-            {/* BUTTON RIGHT */}
-            <button
-              onClick={() =>
-                scrollRef.current.scrollBy({ left: 300, behavior: "smooth" })
-              }
-              className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md border border-white/20 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition"
-            >
-              <FiChevronRight size={20} />
-            </button>
-
-            {/* SCROLL AREA */}
-            <div
-              ref={scrollRef}
-              className="overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide"
-            >
-              <div className="grid grid-flow-col auto-cols-[85%] sm:auto-cols-[60%] md:auto-cols-[40%] lg:auto-cols-[33.333%] gap-4 sm:gap-6 min-w-full">
-                {projects.map((project, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={window.innerWidth > 768 ? { scale: 1.05 } : {}}
-                    className="snap-start bg-[#12141b]/80 p-4 sm:p-6 rounded-2xl border border-gray-800 transition"
-                  >
-                    {/* IMAGE */}
-                    <div className="h-40 sm:h-44 rounded-xl mb-4 overflow-hidden bg-gray-800">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    {/* TITLE */}
+          <div aria-live="polite" className="project-status">
+            {projectStatus === 'loading' && <p>Memuat proyek...</p>}
+            {projectStatus === 'error' && <p>Proyek belum dapat dimuat. <button className="button" onClick={() => { setProjectStatus('loading'); setRetry(retry + 1); }}>Coba lagi</button></p>}
+            {projectStatus === 'ready' && projects.length === 0 && <p>Proyek terbaru akan ditampilkan di sini.</p>}
+          </div>
+          <div className="project-grid">
+            {projects.map((project) => (
+              <article className="project" key={project.id || project.title}>
+                <img
+                  className="project-image"
+                  src={imageSource(project.image)}
+                  alt={`Tampilan aplikasi ${project.title}`}
+                  loading="lazy"
+                  decoding="async"
+                  width="720"
+                  height="405"
+                />
+                <ul className="project-stack" aria-label="Teknologi">
+                  {project.stack.map((tech) => (
+                    <li key={tech}>{tech}</li>
+                  ))}
+                </ul>
+                <div className="project-body">
+                  <p className="project-category">{project.category}</p>
+                  <h3>{project.title}</h3>
+                  <p>{project.description}</p>
+                  <div className="contribution">
+                    <span>Kontribusi saya</span>
+                    <p>{project.contribution}</p>
+                  </div>
+                  {safeWebUrl(project.link) ? (
                     <a
-                      href={project.link}
+                      className="button project-link"
+                      href={safeWebUrl(project.link)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-lg sm:text-xl font-semibold mb-2 inline-block hover:text-purple-400 transition"
+                      aria-label={`Lihat website ${project.title} (tab baru)`}
                     >
-                      {project.title}
+                      Lihat website <FiArrowUpRight />
                     </a>
-
-                    {/* DESC */}
-                    <p className="text-gray-400 text-sm mb-3 sm:mb-4 line-clamp-3">
-                      {project.desc}
-                    </p>
-
-                    {/* TECH */}
-                    <p className="text-xs text-gray-500">{project.tech}</p>
-                  </motion.div>
-                ))}
-              </div>
+                  ) : (
+                    <a
+                      className="text-link project-link"
+                      href={whatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Diskusikan ${project.title} melalui WhatsApp`}
+                    >
+                      Tanyakan detail proyek <FiArrowUpRight />
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section id="tentang" className="section">
+          <SectionHeading name="tentang-saya" />
+          <div className="about-grid">
+            <div className="about-copy">
+              <h3>Teknologi yang tepat, untuk kebutuhan yang jelas.</h3>
+              <p>
+                Saya Hanif Salmizah Rafi, seorang software engineer dan
+                fullstack developer. Pekerjaan saya mencakup aplikasi
+                operasional, sistem informasi pengelolaan sampah, dan sistem
+                antrian wawancara.
+              </p>
+              <p>
+                Pendekatan saya dimulai dari memahami alur kerja dan kebutuhan
+                pengguna, lalu menerjemahkannya menjadi rancangan serta
+                implementasi aplikasi.
+              </p>
+              <a className="text-link" href="#contact">
+                Ceritakan kebutuhan Anda <FiArrowRight />
+              </a>
+            </div>
+            <div className="skills">
+              <h3>Teknologi &amp; tools</h3>
+              {[
+                ["Frontend", "React, Next.js, Tailwind CSS"],
+                ["Backend", "Node.js, Express.js, Laravel"],
+                ["Database", "MySQL"],
+                ["Tools & perancangan", "Git, GitHub, VS Code, UML"],
+              ].map(([title, items]) => (
+                <div className="skill-row" key={title}>
+                  <h4>{title}</h4>
+                  <p>{items}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
-
-        {/* TECH STACK */}
-        <section id="tech-stack" className="px-6 py-20 max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-10">Tech Stack</h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* FRONTEND */}
-            <div className="bg-[#12141b]/70 backdrop-blur p-6 rounded-2xl border border-gray-800">
-              <h3 className="text-purple-400 mb-4 font-semibold">Frontend</h3>
-
-              <div className="space-y-3">
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <FaReact className="text-cyan-400 transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_cyan]" />
-
-                  <span className="transition duration-300 group-hover:text-white">
-                    ReactJS
-                  </span>
-                </div>
-
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <SiNextdotjs className="text-blue-400 transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_blue]" />
-
-                  <span className="transition duration-300 group-hover:text-white">
-                    NextJS
-                  </span>
-                </div>
-
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <SiTailwindcss className="text-cyan-300 transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_cyan]" />
-                  <span className="transition duration-300 group-hover:text-white">
-                    TailwindCSS
-                  </span>
-                </div>
-              </div>
+        <section id="contact" className="section contact-section">
+          <SectionHeading name="kontak" />
+          <div className="contact-grid">
+            <div>
+              <h3>Punya proses yang ingin dibuat lebih sederhana?</h3>
+              <p>
+                Ceritakan ide, alur kerja, atau kendala Anda. Kita dapat
+                mendiskusikan ruang lingkup, fitur yang dibutuhkan, dan langkah
+                pengerjaannya.
+              </p>
+              <p className="contact-tip">
+                Untuk memulai, sertakan gambaran proyek, target waktu, dan
+                kisaran anggaran jika sudah tersedia.
+              </p>
             </div>
-
-            {/* BACKEND */}
-            <div className="bg-[#12141b]/70 backdrop-blur p-6 rounded-2xl border border-gray-800">
-              <h3 className="text-blue-400 mb-4 font-semibold">Backend</h3>
-
-              <div className="space-y-3">
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <FaNodeJs className="text-green-500" />
-                  <span>NodeJS</span>
-                </div>
-
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <FaLaravel className="text-green-500" />
-                  <span>Laravel</span>
-                </div>
-
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <SiMysql className="text-blue-300 transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_blue]" />
-                  <span className="transition duration-300 group-hover:text-white">
-                    MySQL
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* TOOLS */}
-            <div className="bg-[#12141b]/70 backdrop-blur p-6 rounded-2xl border border-gray-800">
-              <h3 className="text-pink-400 mb-4 font-semibold">Tools</h3>
-
-              <div className="space-y-3">
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <FaGithub />
-                  <span>GitHub</span>
-                </div>
-
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <VscVscode className="text-blue-400 transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_blue]" />
-                  <span className="transition duration-300 group-hover:text-white">
-                    VS Code
-                  </span>
-                </div>
-
-                <div className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-[#12141b] border border-gray-800 transition duration-300 hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                  <SiGit className="text-orange-400 transition duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_orange]" />
-                  <span className="transition duration-300 group-hover:text-white">
-                    Git Bash
-                  </span>
-                </div>
-              </div>
+            <div className="contact-box">
+              <p className="contact-label">Mari mulai percakapan</p>
+              <a
+                className="contact-channel"
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaWhatsapp />
+                <span>
+                  <strong>WhatsApp</strong>
+                  <span>+62 823-8624-7771</span>
+                </span>
+                <FiArrowUpRight />
+              </a>
+              <a className="contact-channel" href={email}>
+                <FiMail />
+                <span>
+                  <strong>Email</strong>
+                  <span>hanifsalmizah0@gmail.com</span>
+                </span>
+                <FiArrowUpRight />
+              </a>
             </div>
           </div>
         </section>
-
-        {/* CONTACT */}
-        <section
-          id="contact"
-          className="px-4 sm:px-6 py-16 sm:py-20 max-w-4xl mx-auto text-center"
-        >
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-            Let’s Work Together
-          </h2>
-
-          <p className="text-gray-400 mb-8 text-sm sm:text-base max-w-xl mx-auto">
-            Punya project, ide, atau peluang kolaborasi? Langsung aja hubungi
-            kontak di bawah ini. saya terbuka untuk freelance, kerja sama, atau
-            sekedar diskusi.
-          </p>
-
-          {/* CTA UTAMA */}
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href="https://wa.me/6282386247771"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-medium transition"
-            >
-              Send Whatsapp
+      </main>
+      <footer className="footer">
+        <div className="container footer-inner">
+          <div>
+            <a className="brand" href="#home">
+              [h] Hanif Rafi.
             </a>
-
-            <a
-              href="mailto:hanifsalmizah0@gmail.com"
-              className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-medium transition"
-            >
-              Send Email
-            </a>
+            <p>Software Engineer &amp; Fullstack Developer</p>
           </div>
-
-          {/* ALTERNATIVE (BIAR KELIATAN TRUSTED) */}
-          <p className="text-gray-500 text-xs sm:text-sm mt-6">
-            Biasanya respon cepat via WhatsApp
-          </p>
-        </section>
-      </div>
-    </div>
+          <p>© {new Date().getFullYear()} Hanif Salmizah Rafi</p>
+          <a href="#/admin" className="text-link">
+            Admin
+          </a>
+          <a href="#home" className="text-link">
+            Kembali ke atas ↑
+          </a>
+        </div>
+      </footer>
+    </>
   );
 }
