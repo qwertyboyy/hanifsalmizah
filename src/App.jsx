@@ -12,6 +12,7 @@ import "./App.css";
 import { initialProjects } from "./data/projects";
 import { supabase } from "./lib/supabase";
 import { imageSource, safeWebUrl } from "./lib/projects";
+import TypingHeading from "./TypingHeading";
 
 const whatsapp =
   "https://wa.me/6282386247771?text=" +
@@ -42,18 +43,30 @@ function SectionHeading({ name, children }) {
 export default function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [projects, setProjects] = useState(supabase ? [] : initialProjects);
-  const [projectStatus, setProjectStatus] = useState(supabase ? 'loading' : 'ready');
+  const [projectStatus, setProjectStatus] = useState(
+    supabase ? "loading" : "ready",
+  );
   const [retry, setRetry] = useState(0);
   useEffect(() => {
     if (!supabase) return;
     let active = true;
-    supabase.from('projects').select('*').eq('published', true).order('sort_order').order('created_at')
+    supabase
+      .from("projects")
+      .select("*")
+      .eq("published", true)
+      .order("sort_order")
+      .order("created_at")
       .then(({ data, error }) => {
         if (!active) return;
-        setProjectStatus(error ? 'error' : 'ready');
+        setProjectStatus(error ? "error" : "ready");
         setProjects(error ? [] : data);
-      }).catch(() => { if (active) setProjectStatus('error'); });
-    return () => { active = false; };
+      })
+      .catch(() => {
+        if (active) setProjectStatus("error");
+      });
+    return () => {
+      active = false;
+    };
   }, [retry]);
   return (
     <>
@@ -94,12 +107,12 @@ export default function Portfolio() {
           <div className="hero-copy">
             <p className="eyebrow">Halo, saya Hanif Salmizah Rafi</p>
             <h1>
-              <span>Fullstack developer,</span> dari ide hingga implementasi.
+              <TypingHeading text="Fullstack Developer" />
+              dari ide hingga implementasi.
             </h1>
             <p className="hero-description">
-              Fullstack developer yang membantu mengubah proses manual menjadi
-              sistem digital. Dari aplikasi bisnis hingga sistem informasi, saya
-              mengembangkan solusi dari konsep hingga implementasi.
+              Saya membantu menyederhanakan operasional melalui aplikasi yang
+              dirancang sesuai alur kerja Anda.
             </p>
             <div className="actions">
               <a
@@ -114,23 +127,16 @@ export default function Portfolio() {
                 Lihat karya saya <FiArrowRight />
               </a>
             </div>
-            <p className="hero-note">
-              Aplikasi bisnis / Sistem informasi / Real-time
-            </p>
           </div>
           <figure className="portrait">
             <div className="portrait-frame">
               <img
                 src={profileImage}
                 alt="Hanif Salmizah Rafi, fullstack developer"
-                fetchPriority="auto"
+                fetchPriority="low"
               />
               <span className="portrait-corner" aria-hidden="true" />
             </div>
-            <figcaption>
-              <span className="status-square" aria-hidden="true" />
-              Software Engineer &amp; Fullstack Developer
-            </figcaption>
           </figure>
         </section>
         <section id="layanan" className="section">
@@ -166,16 +172,33 @@ export default function Portfolio() {
         </section>
         <section id="projects" className="section">
           <SectionHeading name="proyek">
-            <span className="section-meta">{String(projects.length).padStart(2, "0")} karya terpilih</span>
+            <span className="section-meta">
+              {String(projects.length).padStart(2, "0")} karya terpilih
+            </span>
           </SectionHeading>
           <p className="section-intro">
             Contoh pekerjaan saya, beserta tujuan, kontribusi, dan teknologi
             yang digunakan.
           </p>
           <div aria-live="polite" className="project-status">
-            {projectStatus === 'loading' && <p>Memuat proyek...</p>}
-            {projectStatus === 'error' && <p>Proyek belum dapat dimuat. <button className="button" onClick={() => { setProjectStatus('loading'); setRetry(retry + 1); }}>Coba lagi</button></p>}
-            {projectStatus === 'ready' && projects.length === 0 && <p>Proyek terbaru akan ditampilkan di sini.</p>}
+            {projectStatus === "loading" && <p>Memuat proyek...</p>}
+            {projectStatus === "error" && (
+              <p>
+                Proyek belum dapat dimuat.{" "}
+                <button
+                  className="button"
+                  onClick={() => {
+                    setProjectStatus("loading");
+                    setRetry(retry + 1);
+                  }}
+                >
+                  Coba lagi
+                </button>
+              </p>
+            )}
+            {projectStatus === "ready" && projects.length === 0 && (
+              <p>Proyek terbaru akan ditampilkan di sini.</p>
+            )}
           </div>
           <div className="project-grid">
             {projects.map((project) => (
